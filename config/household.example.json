@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "household": {
+    "name": "My Home",
+    "cookLabel": "Cook",
+    "timezone": "Asia/Kolkata",
+    "botPrefix": "[Meal Bot 🤖]"
+  },
+  "groups": {
+    "operationsGroupId": "",
+    "cookGroupId": ""
+  },
+  "schedule": {
+    "menuAnnouncement": "22:00",
+    "reviewSummary": "22:30",
+    "lockPlan": "22:40",
+    "cookDelivery": "22:45"
+  },
+  "voice": {
+    "enabled": false,
+    "provider": "macos-say",
+    "voice": "Lekha",
+    "speakingRate": 110
+  },
+  "members": [
+    {
+      "id": "member-1",
+      "displayName": "Member 1",
+      "isAdmin": true,
+      "whatsappSenderIds": [],
+      "defaults": {
+        "lunch": {
+          "sharedDishPortions": 1,
+          "carbs": {
+            "roti": 2,
+            "paratha": 2,
+            "rice": 1
+          },
+          "customItems": []
+        },
+        "dinner": {
+          "sharedDishPortions": 1,
+          "carbs": {
+            "roti": 2,
+            "paratha": 2,
+            "rice": 1
+          },
+          "customItems": []
+        }
+      }
+    },
+    {
+      "id": "member-2",
+      "displayName": "Member 2",
+      "isAdmin": false,
+      "whatsappSenderIds": [],
+      "defaults": {
+        "lunch": {
+          "sharedDishPortions": 0,
+          "carbs": {
+            "roti": 0,
+            "paratha": 0,
+            "rice": 0
+          },
+          "customItems": [
+            {
+              "key": "personal-protein",
+              "label": "Personal protein",
+              "quantity": 200,
+              "unit": "g"
+            },
+            {
+              "key": "vegetables",
+              "label": "Vegetables",
+              "quantity": 1,
+              "unit": "portion"
+            }
+          ]
+        },
+        "dinner": {
+          "sharedDishPortions": 0,
+          "carbs": {
+            "roti": 0,
+            "paratha": 0,
+            "rice": 0
+          },
+          "customItems": [
+            {
+              "key": "personal-protein",
+              "label": "Personal protein",
+              "quantity": 200,
+              "unit": "g"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "guestDefaults": {
+    "copyFromMemberId": "member-1"
+  },
+  "weeklyMenu": [
+    {
+      "weekday": 1,
+      "lunch": {
+        "dishName": "Mixed vegetables",
+        "carbType": "roti"
+      },
+      "dinner": {
+        "dishName": "Lentils",
+        "carbType": "rice"
+      }
+    },
+    {
+      "weekday": 2,
+      "lunch": {
+        "dishName": "Vegetable curry",
+        "carbType": "roti"
+      },
+      "dinner": {
+        "dishName": "Beans",
+        "carbType": "rice"
+      }
+    },
+    {
+      "weekday": 3,
+      "lunch": {
+        "dishName": "Seasonal vegetables",
+        "carbType": "roti"
+      },
+      "dinner": {
+        "dishName": "Chickpeas",
+        "carbType": "rice"
+      }
+    },
+    {
+      "weekday": 4,
+      "lunch": {
+        "dishName": "Vegetable stir-fry",
+        "carbType": "roti"
+      },
+      "dinner": {
+        "dishName": "Lentil curry",
+        "carbType": "rice"
+      }
+    },
+    {
+      "weekday": 5,
+      "lunch": {
+        "dishName": "Mixed vegetables",
+        "carbType": "roti"
+      },
+      "dinner": {
+        "dishName": "Bean curry",
+        "carbType": "rice"
+      }
+    },
+    {
+      "weekday": 6,
+      "lunch": {
+        "dishName": "Vegetable curry",
+        "carbType": "roti"
+      },
+      "dinner": {
+        "dishName": "Lentils",
+        "carbType": "rice"
+      }
+    },
+    {
+      "weekday": 7,
+      "lunch": {
+        "dishName": "Stuffed flatbread",
+        "carbType": "paratha"
+      },
+      "dinner": {
+        "dishName": "Yogurt curry",
+        "carbType": "rice"
+      }
+    }
+  ]
+}
