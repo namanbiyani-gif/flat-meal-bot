@@ -1,66 +1,210 @@
 # Flat Meal Bot
 
-A configurable WhatsApp meal-planning bot for shared homes.
+A WhatsApp meal-planning bot for shared homes.
 
-It posts the next day's plan, lets household members change meals inside WhatsApp, calculates aggregate cooking quantities, and sends final text and optional voice instructions to a cook group.
+It posts tomorrow's menu, assumes everyone's normal meal quantities unless someone asks for a change, calculates total cooking quantities, and sends final instructions to the cook.
+
+No coding knowledge is required for normal installation and use. You will need to copy and paste a few commands into Terminal.
+
+> [!IMPORTANT]
+> Flat Meal Bot uses WhatsApp's linked-device system through Baileys. It is not the official WhatsApp Business API. Test it in disposable WhatsApp groups before using real household groups.
 
 ## What it does
 
-- Assumes configured defaults when nobody replies.
-- Posts a daily menu and review summary at configurable times.
-- Supports personal opt-outs, leftovers, quantity changes, guests, vacations, menu changes, and cook notes.
-- Uses confirmation for household-impacting changes.
-- Stores an audited change history with undo references.
-- Locks an immutable daily snapshot before cook delivery.
-- Retries text and voice independently without resending successful deliveries.
-- Replaces outdated cook text and voice after a late change.
-- Keeps configuration, WhatsApp authentication, databases, logs, and audio local and ignored by Git.
+- Posts tomorrow's lunch and dinner menu
+- Uses each person's normal quantities automatically
+- Accepts meal changes inside WhatsApp
+- Handles guests, vacations, leftovers, and quantity changes
+- Totals rotis, rice, parathas, shared dishes, and custom items
+- Sends the cook a final text message
+- Can also send a macOS-generated voice note
+- Replaces outdated cook instructions after a late change
+- Keeps configuration and WhatsApp login data on your own computer
 
-## Requirements
+## Before you start
 
-- Node.js 22.5 or newer.
-- A computer that can stay logged in, awake, and online at the scheduled times.
-- A WhatsApp account that can link another device.
-- macOS plus `ffmpeg` only when voice notes are enabled.
+You need:
 
-This project uses a linked-device WhatsApp library rather than the official Business API. Review that trade-off before using it with an important account.
+1. A Mac that can stay awake and online around the scheduled meal-planning time
+2. A WhatsApp account that can link another device
+3. Two test WhatsApp groups:
+   - one for household members
+   - one for cook instructions
+   The same test group can be used for both.
+4. Node.js version 22 or newer
 
-## Setup
+### Install Node.js
+
+Go to the official Node.js download page:
+
+https://nodejs.org/en/download
+
+Download and run the macOS installer for an LTS version.
+
+After installation:
+
+1. Open **Terminal** using Spotlight search
+2. Paste:
 
 ```bash
-git clone https://github.com/namanbiyani-gif/flat-meal-bot.git
-cd flat-meal-bot
+node --version
+```
+
+You should see a version beginning with `v22`, `v24`, or newer.
+
+## Easy macOS installation
+
+### Step 1: Download the bot
+
+On this GitHub page:
+
+1. Click the green **Code** button
+2. Click **Download ZIP**
+3. Open the downloaded ZIP
+4. Move the extracted folder into **Documents**
+5. Rename the folder to:
+
+```text
+flat-meal-bot
+```
+
+Your folder should now be:
+
+```text
+Documents/flat-meal-bot
+```
+
+### Step 2: Open Terminal in the bot folder
+
+Open Terminal and paste:
+
+```bash
+cd ~/Documents/flat-meal-bot
+```
+
+Then install the required packages:
+
+```bash
 npm install
+```
+
+Wait until the command finishes and the Terminal prompt returns.
+
+### Step 3: Configure your household
+
+Run:
+
+```bash
 npm run setup
+```
+
+The setup wizard will ask simple questions about:
+
+- household name
+- how the cook should be addressed
+- timezone
+- daily schedule
+- household members
+- each person's normal meal quantities
+- guests
+- weekly menu
+- optional voice notes
+
+Press **Enter** to accept a suggested value shown inside square brackets.
+
+Your answers are saved only on your computer in:
+
+```text
+config/household.json
+```
+
+That private file is not part of the public GitHub repository.
+
+### Step 4: Connect WhatsApp
+
+Run:
+
+```bash
 npm run setup:whatsapp
+```
+
+A QR code will appear in Terminal.
+
+On your phone:
+
+1. Open WhatsApp
+2. Open **Settings**
+3. Tap **Linked Devices**
+4. Tap **Link a Device**
+5. Scan the QR code shown in Terminal
+
+The bot will then list your WhatsApp groups.
+
+Enter the number beside the household test group, then choose the cook test group. No WhatsApp message is sent during setup.
+
+### Step 5: Check the installation
+
+Run:
+
+```bash
 npm run doctor
+```
+
+A successful check should show that configuration, WhatsApp authentication, and group destinations are valid.
+
+### Step 6: Preview the plan
+
+Run:
+
+```bash
+npm run preview
+```
+
+This prints tomorrow's household summary and cook instructions in Terminal without sending anything.
+
+Review the quantities carefully.
+
+### Step 7: Start a safe test
+
+Start the bot:
+
+```bash
 npm start
 ```
 
-`npm run setup` asks for:
+Keep Terminal open.
 
-- household and cook terminology,
-- timezone and schedule,
-- members and administrators,
-- lunch and dinner defaults,
-- custom recurring items such as protein, eggs, salad, or milk,
-- guest defaults,
-- a seven-day menu,
-- optional macOS voice settings.
+In the household test group, send:
 
-`npm run setup:whatsapp` displays a QR code, saves the linked-device session under `auth/`, lists your WhatsApp groups, and lets you select the operations and cook groups. It does not send a test message.
+```text
+change
+```
 
-## First-time member linking
+The bot should reply with a numbered menu.
 
-The first time an unknown person messages the operations group, the bot replies with the configured member list. That person links their account with:
+To stop the bot, return to Terminal and press:
+
+```text
+Control + C
+```
+
+Do not select real household groups until this test works correctly.
+
+## WhatsApp setup for household members
+
+The first time a household member messages the bot, it asks them to link their WhatsApp account to a configured member.
+
+They reply with a number such as:
 
 ```text
 link 1
 ```
 
-Each configured member should link once. An already-linked member cannot be claimed by another account.
+Each person only needs to do this once.
 
-## WhatsApp usage
+## Everyday use
+
+Nobody needs to reply when the default plan is correct.
 
 Send:
 
@@ -68,77 +212,205 @@ Send:
 change
 ```
 
-to open the numbered guided menu. Common shortcuts also work:
+to open the guided menu.
+
+Common shortcuts:
 
 ```text
 no lunch
+no dinner
 dinner leftovers
 lunch 3 rotis
 dinner dish 0.5
-lunch item personal-protein 150
 guest lunch 2
 vacation 2026-08-01 to 2026-08-05
-menu dinner: Chickpeas | rice
-cook note dinner: less spicy
+```
+
+Shared changes may require confirmation:
+
+```text
 confirm ABCD1234
+```
+
+Cancel a pending change:
+
+```text
+cancel ABCD1234
+```
+
+Undo an active change:
+
+```text
 undo ABCD1234
 ```
 
-Permanent personal defaults can be changed with:
+## Default daily schedule
 
-```text
-default lunch carb 3
-default dinner dish 0.5
-default lunch item personal-protein 150
-```
+The sample configuration uses:
 
-Administrators can change the regular weekly menu through option 6 in the guided flow.
+| Time | Action |
+|---|---|
+| 10:00 PM | Post tomorrow's menu |
+| 10:30 PM | Post the review summary |
+| 10:40 PM | Lock the final plan silently |
+| 10:45 PM | Send cook instructions |
 
-## Daily workflow
+The setup wizard lets you change these times.
 
-The example schedule is:
+## Run automatically every day on macOS
 
-- 22:00 — menu announcement,
-- 22:30 — review summary,
-- 22:40 — silent plan lock,
-- 22:45 — final cook text and optional voice note.
+Only do this after manual testing works correctly.
 
-A late change after lock creates a replacement snapshot. The bot posts an operations update, attempts to delete the old cook text and voice independently, and sends fresh normal cook instructions from the new snapshot.
-
-## Useful commands
-
-```bash
-npm run preview                    # Preview using local config, or the example config
-npm run preview -- 2026-08-03     # Preview a specific service date
-npm run db:init                    # Initialize the local database explicitly
-npm run doctor                     # Check config, WhatsApp auth, and voice dependencies
-npm test                           # Run the test suite
-```
-
-On macOS, install the optional background service with:
+From the bot folder, run:
 
 ```bash
 bash scripts/install-launch-agent.sh
 ```
 
-The Mac must remain logged in, awake, online, and normally have its lid open when scheduled jobs run.
+This starts the bot automatically for your macOS user account.
 
-## Local files and privacy
+The Mac must remain:
 
-Never commit these paths:
+- logged in
+- awake
+- online
 
-- `.env`
-- `config/household.json`
-- `auth/`
-- `data/`
-- `logs/`
-- `audio/`
+Closing a MacBook lid usually puts it to sleep, so scheduled WhatsApp messages may not run.
 
-They are included in `.gitignore`. The repository contains fictional example members and group placeholders only.
+## Updating later
 
-## Architecture
+Open Terminal and go to the folder:
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+```bash
+cd ~/Documents/flat-meal-bot
+```
+
+When the project publishes an update, ZIP-based installations are easiest to update by downloading a fresh ZIP and repeating setup carefully. Back up these private folders first:
+
+```text
+config/
+auth/
+data/
+```
+
+Git users can instead run:
+
+```bash
+git pull
+npm install
+npm run doctor
+```
+
+## Troubleshooting
+
+### `node: command not found`
+
+Node.js is not installed correctly. Install it from:
+
+https://nodejs.org/en/download
+
+Then close and reopen Terminal.
+
+### `npm: command not found`
+
+Reinstall Node.js, then reopen Terminal.
+
+### WhatsApp QR code does not appear
+
+Run:
+
+```bash
+rm -rf auth
+npm run setup:whatsapp
+```
+
+This removes only the bot's local linked-device session. It does not delete phone chats.
+
+### WhatsApp disconnected
+
+On your phone, open **WhatsApp → Settings → Linked Devices** and check whether the bot's linked device still exists.
+
+Pair again with:
+
+```bash
+npm run setup:whatsapp
+```
+
+### Messages are not sent at the scheduled time
+
+Check that:
+
+- the Mac is awake
+- the Mac is online
+- the user account is logged in
+- the bot is running
+- the selected WhatsApp groups still exist
+
+Run:
+
+```bash
+npm run doctor
+```
+
+### Voice notes do not work
+
+Voice notes are optional and currently require macOS plus `ffmpeg`.
+
+Text instructions continue to work without voice notes.
+
+## Important private files
+
+Never upload or share these:
+
+```text
+.env
+config/household.json
+auth/
+data/
+logs/
+audio/
+```
+
+They may contain household settings, WhatsApp authentication, database records, or generated audio.
+
+## Useful commands
+
+| Command | What it does |
+|---|---|
+| `npm run setup` | Configure the household |
+| `npm run setup:whatsapp` | Link WhatsApp and choose groups |
+| `npm run doctor` | Check whether setup is valid |
+| `npm run preview` | Show the plan without sending |
+| `npm start` | Start the bot |
+| `npm test` | Run automated tests |
+| `npm run test:privacy` | Check the repository for private data |
+
+## Technical notes
+
+Flat Meal Bot uses:
+
+- Node.js
+- Baileys for WhatsApp linked-device transport
+- SQLite for local state
+- immutable daily snapshots
+- idempotent scheduled jobs
+- independent delivery retries
+
+One installation manages one household.
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the technical design.
+
+## Limitations
+
+- The computer must stay running and online.
+- WhatsApp or Baileys changes can affect linked-device behavior.
+- Voice generation is currently macOS-only.
+- This is a deterministic workflow bot, not a general-purpose AI assistant.
+- There is no hosted cloud service included.
+
+## Security
+
+Read [SECURITY.md](SECURITY.md) before sharing logs or reporting a vulnerability.
 
 ## License
 
