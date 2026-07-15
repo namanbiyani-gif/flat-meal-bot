@@ -202,19 +202,148 @@ link 1
 
 Each person only needs to do this once.
 
-## Everyday use
+## Making changes in WhatsApp
 
 Nobody needs to reply when the default plan is correct.
 
-Send:
+To make a change, send either:
 
 ```text
 change
 ```
 
-to open the guided menu.
+or:
 
-Common shortcuts:
+```text
+menu
+```
+
+The bot replies with numbered categories:
+
+```text
+1. My meals tomorrow
+2. Guests tomorrow
+3. Tomorrow's shared menu
+4. I'll be away for some dates
+5. My usual meal defaults
+6. Weekly household menu
+7. Review or undo a change
+```
+
+Category 6 is shown only to household administrators.
+
+Reply with the number of the category you need. The bot will then show the exact format for the next reply.
+
+Send `0` or `cancel` at any point to leave the guided flow.
+
+### 1. My meals tomorrow
+
+Choose category `1`, then reply with a personal meal change such as:
+
+```text
+lunch skip
+dinner leftovers
+lunch carb 3
+dinner dish 0.5
+lunch item personal-protein 150
+lunch include
+```
+
+### 2. Guests tomorrow
+
+Choose category `2`, then reply with the meal and number of guests:
+
+```text
+lunch 2
+```
+
+Guest changes affect household cooking totals and may require confirmation.
+
+### 3. Tomorrow's shared menu
+
+Choose category `3`, then reply in this format:
+
+```text
+dinner: Chickpeas | rice
+```
+
+A shared-menu change affects the household and requires confirmation.
+
+### 4. I'll be away for some dates
+
+Choose category `4`, then enter the date range:
+
+```text
+2026-08-01 to 2026-08-05
+```
+
+This opts you out of both lunch and dinner for those dates.
+
+### 5. My usual meal defaults
+
+Choose category `5`, then enter a permanent personal default such as:
+
+```text
+lunch carb 3
+dinner dish 0.5
+lunch item personal-protein 150
+```
+
+These defaults are used on future days unless you make a one-day change.
+
+### 6. Weekly household menu
+
+This category is available only to administrators.
+
+Choose category `6`, then enter a permanent weekly-menu change:
+
+```text
+Monday lunch: Mixed vegetables | roti
+```
+
+The bot shows the proposed change and asks you to reply:
+
+```text
+1
+```
+
+to confirm, or:
+
+```text
+2
+```
+
+to cancel.
+
+### 7. Review or undo a change
+
+Choose category `7` to see recent change references and their status.
+
+Undo an active change with:
+
+```text
+undo ABCD1234
+```
+
+### Confirmation references
+
+When a household-wide change needs confirmation, the bot returns a reference.
+
+Confirm it with:
+
+```text
+confirm ABCD1234
+```
+
+Cancel it with:
+
+```text
+cancel ABCD1234
+```
+
+### Optional direct shortcuts
+
+Experienced users can skip the numbered menu and send supported shortcuts directly:
 
 ```text
 no lunch
@@ -226,23 +355,7 @@ guest lunch 2
 vacation 2026-08-01 to 2026-08-05
 ```
 
-Shared changes may require confirmation:
-
-```text
-confirm ABCD1234
-```
-
-Cancel a pending change:
-
-```text
-cancel ABCD1234
-```
-
-Undo an active change:
-
-```text
-undo ABCD1234
-```
+The numbered `change` flow is the recommended option because it shows the expected format at each step.
 
 ## Default daily schedule
 
